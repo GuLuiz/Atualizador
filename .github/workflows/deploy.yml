@@ -3,26 +3,40 @@ name: Deploy to Server via SCP
 on:
   push:
     branches:
-      - main # Altere para a branch que você usa para deploy
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Deploy via SCP (File Transfer)
-      uses: appleboy/scp-action@v0.1.4 # <--- ALTERE AQUI PARA scp-action (verifique a versão mais recente no GitHub)
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 65002 # Sua porta da Hostinger
-        source: "./" # O que você quer copiar do seu repositório ('.' para tudo na raiz)
-        target: "public_html/updates/" # Para onde copiar no servidor
-        overwrite: true # Para sobrescrever arquivos existentes
+      - name: Preparar pacote para deploy (excluir itens indesejados)
+        run: |
+          set -e
+          mkdir -p deploy
+          rsync -a --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".gitignore" \
+            --exclude ".gitattributes" \
+            --exclude "node_modules" \
+            --exclude "tests" \
+            --exclude "docs" \
+            --exclude ".env" \
+            ./ deploy/
 
-    - name: Deployment completed
-      run: echo "Deployment para o servidor concluído!"
+      - name: Deploy via SCP (enviar somente conteúdo de deploy/)
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
+          port: 65002
+          source: "./"
+          target: "public_html/updates"
+
+      - name: Mensagem final
+        run: echo "Deployment para o servidor concluído!"
