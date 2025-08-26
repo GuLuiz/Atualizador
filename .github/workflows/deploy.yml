@@ -13,7 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # (Opcional) Você pode manter este passo para depuração, se quiser ver o conteúdo do index.php
       - name: Verify index.php content (for debugging - can remove later)
         run: |
           echo "Content of index.php found in the repository root on the runner:"
@@ -33,9 +32,10 @@ jobs:
             --exclude "tests/" \
             --exclude "docs/" \
             --exclude ".env" \
+            --exclude "deploy/" \ # <--- NOVA EXCLUSÃO AQUI para evitar a pasta aninhada
             ./ deploy/
 
-      - name: List contents of deploy folder # <--- NOVO PASSO AQUI!
+      - name: List contents of deploy folder
         run: ls -la deploy/
 
       - name: Deploy via SCP (send only content from deploy/)
@@ -46,8 +46,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
           source: "deploy/" 
-          target: "public_html/updates/"
-          overwrite: true 
+          target: "public_html/test_deploy/" # <--- NOVO TARGET DE TESTE AQUI!
+          overwrite: true
+          debug: true # <--- ATIVAR MODO DE DEBUG!
 
       - name: Final Message
         run: echo "Deployment to server completed!"
