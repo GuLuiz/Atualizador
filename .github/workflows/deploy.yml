@@ -35,6 +35,9 @@ jobs:
             --exclude ".env" \
             ./ deploy/
 
+      - name: List contents of deploy folder # <--- NOVO PASSO AQUI!
+        run: ls -la deploy/
+
       - name: Deploy via SCP (send only content from deploy/)
         uses: appleboy/scp-action@v0.1.4
         with:
