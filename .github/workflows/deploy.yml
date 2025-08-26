@@ -1,48 +1,28 @@
-name: Deploy to Server via SSH
+name: Deploy to Server via SCP
 
 on:
   push:
     branches:
-      - main # Altere para a branch que você usa para deploy (ex: master, production)
+      - main # Altere para a branch que você usa para deploy
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest # O ambiente onde a ação será executada
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4 # Baixa seu código do GitHub
+      uses: actions/checkout@v4
 
-    # Se você tem um projeto que precisa de build (ex: Node.js/frontend dentro do plugin)
-    # Descomente e ajuste os passos abaixo, se aplicável:
-    # - name: Setup Node.js (exemplo para Node.js/frontend)
-    #   uses: actions/setup-node@v4
-    #   with:
-    #     node-version: '18' # Ajuste a versão do Node.js
-    # - name: Install Dependencies (exemplo)
-    #   run: npm install
-    # - name: Build Project (exemplo)
-    #   run: npm run build
-    #   env:
-    #     CI: true # Para evitar avisos de testes em ambiente CI
-
-    - name: Deploy via SSH
-      uses: appleboy/ssh-action@v1.0.0 # Uma Action popular para SSH/SCP
+    - name: Deploy via SCP (File Transfer)
+      uses: appleboy/scp-action@v0.1.4 # <--- ALTERE AQUI PARA scp-action (verifique a versão mais recente no GitHub)
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 65002 # Porta SSH (geralmente 22)
-        source: "." # Caminho dos arquivos no seu repositório a serem copiados ('.' para tudo na raiz)
-                   # Se você tem uma pasta 'dist' ou 'build' após o build, altere para 'dist/' ou 'build/'
-        target: ${{ secrets.TARGET_DIR }} # Caminho no servidor de destino
-        overwrite: true # Sobrescrever arquivos existentes
-        # Se precisar executar comandos após a cópia (ex: reiniciar serviço web)
-        # script: |
-        #   cd ${{ secrets.TARGET_DIR }}
-        #   sudo systemctl reload php-fpm # Exemplo para recarregar PHP-FPM se for um plugin
-        #   # sudo systemctl restart nginx # Exemplo para reiniciar Nginx
-        #   # Adicione outros comandos de pós-deploy aqui
-        
+        port: 65002 # Sua porta da Hostinger
+        source: "./" # O que você quer copiar do seu repositório ('.' para tudo na raiz)
+        target: "public_html/updates/" # Para onde copiar no servidor
+        overwrite: true # Para sobrescrever arquivos existentes
+
     - name: Deployment completed
       run: echo "Deployment para o servidor concluído!"
