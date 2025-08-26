@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Preparar pacote para deploy 
+      - name: Preparar pacote para deploy (excluir itens indesejados)
         run: |
           set -e
           mkdir -p deploy
@@ -31,11 +31,11 @@ jobs:
       - name: Deploy via SCP (enviar somente conteúdo de deploy/)
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          source: "deploy/*"
+          source: "./"
           target: "public_html/updates"
 
       - name: Mensagem final
