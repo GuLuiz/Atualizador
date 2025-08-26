@@ -27,7 +27,6 @@ $plugins_info = [
         'sections'       => [
             'description' => 'Player minimalista com UX fluida, botões próprios e desbloqueio inteligente para o WordPress.',
             'changelog'   => '<h4>Versão 1.0.3</h4><ul><li>Melhoria na barra de progresso para vídeos curtos (Reels).</li><li>Otimização na inicialização do player.</li><li>Correção de pequenos bugs de interface.</li></ul><h4>Versão 1.0.0</h4><ul><li>Lançamento inicial.</li></ul>',
-            // Você pode adicionar outras seções como 'installation', 'faq', 'screenshots', etc.
         ],
         // 'new_version_url' => 'https://github.com/GuLuiz/Converttize/releases/tag/v1.0.1', // Opcional: Link para o changelog completo no GitHub
     ],
