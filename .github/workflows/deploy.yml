@@ -14,15 +14,16 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Deploy via SCP (File Transfer)
-      uses: appleboy/scp-action@v0.1.4 # <--- ALTERE AQUI PARA scp-action (verifique a versão mais recente no GitHub)
+      uses: appleboy/scp-action@v0.1.7 # Recomendo a v0.1.7 (mais recente da v0.1.x), mas a v0.1.4 deve funcionar.
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 65002 # Sua porta da Hostinger
-        source: "./!./.git"
-        target: "public_html/updates/" # Para onde copiar no servidor
-        overwrite: true # Para sobrescrever arquivos existentes
+        source: "./"
+        target: "public_html/updates/"
+        overwrite: true
+        exclude: ".git" 
 
     - name: Deployment completed
       run: echo "Deployment para o servidor concluído!"
