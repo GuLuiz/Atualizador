@@ -14,7 +14,6 @@
 $plugin_slug = $_GET['slug'] ?? '';
 
 // --- CONFIGURAÇÃO DO SEU PLUGIN ---
-// Você pode ter múltiplos plugins aqui, usando o $plugin_slug para identificá-los.
 $plugins_info = [
     'converttize-player' => [ // <--- O SLUG DO SEU PLUGIN. DEVE SER EXATAMENTE IGUAL AO QUE VOCÊ USA EM Puc_v4_Factory::buildUpdateChecker()
         'name'           => 'Converttize', // Nome do seu plugin
@@ -38,7 +37,6 @@ $plugins_info = [
     // Se você tiver outros plugins, adicione-os aqui com seus respectivos slugs.
 ];
 
-// --- FIM DA CONFIGURAÇÃO ---
 
 // Define o cabeçalho HTTP para indicar que o conteúdo é JSON
 header('Content-Type: application/json; charset=utf-8');
@@ -51,4 +49,4 @@ if (array_key_exists($plugin_slug, $plugins_info)) {
     echo json_encode(['error' => 'Plugin not found', 'slug_requested' => $plugin_slug]);
 }
 
-exit; // Garante que nenhum outro conteúdo seja enviado após o JSON
+exit; 
