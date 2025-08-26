@@ -23,6 +23,10 @@ jobs:
             --exclude ".gitignore" \
             --exclude ".gitattributes" \
             --exclude "node_modules" \
+            --exclude "tests" \
+            --exclude "docs" \
+            --exclude ".env" \
+            ./ deploy/
 
       - name: Deploy via SCP (enviar somente conteúdo de deploy/)
         uses: appleboy/scp-action@v0.1.4
@@ -36,3 +40,5 @@ jobs:
 
       - name: Mensagem final
         run: echo "Deployment para o servidor concluído!"
+
+
