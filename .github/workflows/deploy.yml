@@ -4,29 +4,39 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy via SCP (File Transfer)
+      - name: Preparar pacote para deploy 
+        run: |
+          set -e
+          mkdir -p deploy
+          rsync -a --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".gitignore" \
+            --exclude ".gitattributes" \
+            --exclude "node_modules" \
+            --exclude "tests" \
+            --exclude "docs" \
+            --exclude ".env" \
+            ./ deploy/
+
+      - name: Deploy via SCP (enviar somente conteúdo de deploy/)
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
           port: 65002
+          source: "deploy/*"
+          target: "public_html/updates"
 
-          source: "./*"
-
-          target: "public_html/updates/"
-          overwrite: true
-          debug: true
-
-      - name: Deployment completed
+      - name: Mensagem final
         run: echo "Deployment para o servidor concluído!"
