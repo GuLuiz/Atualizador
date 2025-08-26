@@ -20,7 +20,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 65002 # Sua porta da Hostinger
-        source: "./" # O que você quer copiar do seu repositório ('.' para tudo na raiz)
+        source: "./!./.git"
         target: "public_html/updates/" # Para onde copiar no servidor
         overwrite: true # Para sobrescrever arquivos existentes
 
