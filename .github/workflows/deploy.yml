@@ -13,6 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # NOVO PASSO: Verificar o conteúdo do index.php no runner
+      - name: Verificar Conteúdo do index.php no Ambiente do GitHub Actions
+        run: |
+          echo "Conteúdo de index.php encontrado na raiz do repositório no runner:"
+          cat index.php # Este comando imprimirá o conteúdo do arquivo index.php no log
+          echo "--- Fim da verificação do index.php ---"
+
       - name: Preparar pacote para deploy (excluir itens indesejados)
         run: |
           set -e
@@ -35,10 +42,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          source: "./"
+          source: "./" # Isso continua enviando todo o workspace, incluindo o deploy/ e .git
           target: "public_html/updates/"
+          overwrite: true # Garante que os arquivos sejam sobrescritos
 
       - name: Mensagem final
         run: echo "Deployment para o servidor concluído!"
-
-
