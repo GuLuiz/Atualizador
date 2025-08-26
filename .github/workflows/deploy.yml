@@ -3,7 +3,7 @@ name: Deploy to Server via SCP
 on:
   push:
     branches:
-      - main # Altere para a branch que você usa para deploy
+      - main # Ou a branch que você usa para deploy
 
 jobs:
   deploy:
@@ -14,14 +14,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Deploy via SCP (File Transfer)
-      uses: appleboy/scp-action@v0.1.7 # Recomendo a v0.1.7 (mais recente da v0.1.x), mas a v0.1.4 deve funcionar.
+      uses: appleboy/scp-action@v0.1.13 
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 65002 # Sua porta da Hostinger
-        source: "./"
-        target: "public_html/updates/"
+        port: 65002 
+        source: "./" 
+        target: "public_html/updates/" 
         overwrite: true
         exclude: ".git" 
 
