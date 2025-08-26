@@ -6,7 +6,6 @@
  * It provides update details and direct download links for your plugin.
  * The script returns JSON data expected by the Plugin Update Checker library.
  *
- * For more details, refer to: https://github.com/YahnisElsts/plugin-update-checker/wiki/Update-Server
  */
 
 // Example: 'converttize-player'
