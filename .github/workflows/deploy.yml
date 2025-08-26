@@ -13,11 +13,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # NOVO PASSO: Verificar o conteúdo do index.php no runner
-      - name: Verificar Conteúdo do index.php no Ambiente do GitHub Actions
+      - name: Verificar Conteúdo do index.php no Ambiente do GitHub Actions # Pode remover este passo depois de tudo funcionar
         run: |
           echo "Conteúdo de index.php encontrado na raiz do repositório no runner:"
-          cat index.php # Este comando imprimirá o conteúdo do arquivo index.php no log
+          cat index.php
           echo "--- Fim da verificação do index.php ---"
 
       - name: Preparar pacote para deploy (excluir itens indesejados)
@@ -36,15 +35,15 @@ jobs:
             ./ deploy/
 
       - name: Deploy via SCP (enviar somente conteúdo de deploy/)
-        uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/scp-action@v0.1.4 # Mantenha esta versão, ela funcionará com a correção do 'source'
         with:
           host: ${{ secrets.SSH_HOST}}
           username: ${{ secrets.SSH_USERNAME}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          source: "./" # Isso continua enviando todo o workspace, incluindo o deploy/ e .git
+          source: "deploy/"
           target: "public_html/updates/"
-          overwrite: true # Garante que os arquivos sejam sobrescritos
+          overwrite: true
 
       - name: Mensagem final
         run: echo "Deployment para o servidor concluído!"
