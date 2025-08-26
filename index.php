@@ -9,7 +9,6 @@
  * For more details, refer to: https://github.com/YahnisElsts/plugin-update-checker/wiki/Update-Server
  */
 
-// Define the plugin slug. This must match the slug used in your plugin's main file.
 // Example: 'converttize-player'
 $plugin_slug = $_GET['slug'] ?? '';
 
