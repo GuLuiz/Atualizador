@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  # Opcional: dispara manualmente quando quiser
   workflow_dispatch:
 
 jobs:
@@ -16,28 +15,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy via SCP (File Transfer)
-        uses: appleboy/scp-action@v0.1.4 
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 65002
 
-          source: "."
+          source: "./*"
 
           target: "public_html/updates/"
-
           overwrite: true
           debug: true
-
-          exclude: |
-            .git/**
-            .github/**
-            node_modules/**
-            .DS_Store
-            .gitignore
-            .gitattributes
-            **/*.map
 
       - name: Deployment completed
         run: echo "Deployment para o servidor concluído!"
