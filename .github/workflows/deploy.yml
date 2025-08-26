@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
           source: "deploy/" 
-          target: "public_html/test_deploy/"
+          target: "public_html/updates/"
           overwrite: true
           debug: true
 
