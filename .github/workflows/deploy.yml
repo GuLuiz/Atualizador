@@ -39,7 +39,7 @@ jobs:
         run: ls -la deploy/
 
       - name: Testar Permissões de Escrita Remota
-        uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/scp-action@v1.0.0
         id: remote_write_test
         with:
           host: ${{ secrets.SSH_HOST}}
