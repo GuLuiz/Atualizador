@@ -10,40 +10,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Verificar Conteúdo do index.php no Ambiente do GitHub Actions # Pode remover este passo depois de tudo funcionar
+      # (Opcional) Você pode manter este passo para depuração, se quiser ver o conteúdo do index.php
+      - name: Verify index.php content (for debugging - can remove later)
         run: |
-          echo "Conteúdo de index.php encontrado na raiz do repositório no runner:"
+          echo "Content of index.php found in the repository root on the runner:"
           cat index.php
-          echo "--- Fim da verificação do index.php ---"
+          echo "--- End of index.php verification ---"
 
-      - name: Preparar pacote para deploy (excluir itens indesejados)
+      - name: Prepare package for deploy (exclude unwanted items)
         run: |
           set -e
           mkdir -p deploy
           rsync -a --delete \
-            --exclude ".git" \
-            --exclude ".github" \
+            --exclude ".git/" \ 
+            --exclude ".github/" \ 
             --exclude ".gitignore" \
             --exclude ".gitattributes" \
-            --exclude "node_modules" \
-            --exclude "tests" \
-            --exclude "docs" \
+            --exclude "node_modules/" \
+            --exclude "tests/" \
+            --exclude "docs/" \
             --exclude ".env" \
-            ./ deploy/
+            ./ deploy/ 
 
-      - name: Deploy via SCP (enviar somente conteúdo de deploy/)
-        uses: appleboy/scp-action@v0.1.4 # Mantenha esta versão, ela funcionará com a correção do 'source'
+      - name: Deploy via SCP (send only content from deploy/)
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST}}
           username: ${{ secrets.SSH_USERNAME}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          source: "deploy/"
+          source: "deploy/" 
           target: "public_html/updates/"
-          overwrite: true
+          overwrite: true 
 
-      - name: Mensagem final
-        run: echo "Deployment para o servidor concluído!"
+      - name: Final Message
+        run: echo "Deployment to server completed!"
