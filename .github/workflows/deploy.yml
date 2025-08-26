@@ -13,7 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # (Opcional) Você pode manter este passo para depuração, se quiser ver o conteúdo do index.php
       - name: Verify index.php content (for debugging - can remove later)
         run: |
           echo "Content of index.php found in the repository root on the runner:"
@@ -33,7 +32,11 @@ jobs:
             --exclude "tests/" \
             --exclude "docs/" \
             --exclude ".env" \
+            --exclude "deploy/" \
             ./ deploy/
+
+      - name: List contents of deploy folder
+        run: ls -la deploy/
 
       - name: Deploy via SCP (send only content from deploy/)
         uses: appleboy/scp-action@v0.1.4
@@ -44,7 +47,8 @@ jobs:
           port: 65002
           source: "deploy/" 
           target: "public_html/updates/"
-          overwrite: true 
+          overwrite: true
+          debug: true
 
       - name: Final Message
         run: echo "Deployment to server completed!"
