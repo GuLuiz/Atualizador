@@ -39,17 +39,17 @@ jobs:
         run: ls -la deploy/
 
       - name: Testar Permissões de Escrita Remota
-        uses: appleboy/scp-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.0
         id: remote_write_test
         with:
           host: ${{ secrets.SSH_HOST}}
           username: ${{ secrets.SSH_USERNAME}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          debug: true
-
-          commands: |
+          script: |
+            echo "Tentando criar arquivo de teste..."
             echo "Este é um arquivo de teste gerado pelo GitHub Actions." > public_html/updates/github_actions_test.txt
+            echo "Verificando se o arquivo foi criado e seu conteúdo..."
             ls -l public_html/updates/github_actions_test.txt || echo "Erro: Arquivo não encontrado ou permissão negada no ls -l."
             cat public_html/updates/github_actions_test.txt || echo "Erro: Não foi possível ler o conteúdo do arquivo."
             echo "--- Fim do teste de escrita ---"
@@ -61,8 +61,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
           port: 65002
-          source: "deploy/" 
-          target: ${{ secrets.TARGET_DIR}}
+          source: "deploy/"
+          target: "public_html/updates/"
           overwrite: true
           debug: true
           strip_components: 1
