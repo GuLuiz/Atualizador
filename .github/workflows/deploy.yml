@@ -3,30 +3,36 @@ name: Deploy to Server via SCP
 on:
   push:
     branches:
-      - main # Ou a branch que você usa para deploy
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Verify index.php content in runner # NOVO PASSO
-      run: |
-        echo "Conteúdo de index.php no runner:"
-        cat index.php # Irá imprimir o conteúdo do index.php no log
-        echo "Fim da verificação."
+      - name: Preparar pacote para deploy (excluir itens indesejados)
+        run: |
+          set -e
+          mkdir -p deploy
+          rsync -a --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".gitignore" \
+            --exclude ".gitattributes" \
+            --exclude "node_modules" \
 
-    - name: Deploy via SCP (File Transfer)
-      uses: appleboy/scp-action@v0.1.4 # Mantenha a versão que está funcionando sem erros
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 65002 
-        source: "./" 
-        target: "public_html/updates/" 
-        overwrite: true
-  
+      - name: Deploy via SCP (enviar somente conteúdo de deploy/)
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
+          port: 65002
+          source: "./"
+          target: "public_html/updates/"
+
+      - name: Mensagem final
+        run: echo "Deployment para o servidor concluído!"
