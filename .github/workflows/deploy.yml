@@ -25,15 +25,15 @@ jobs:
           set -e
           mkdir -p deploy
           rsync -a --delete \
-            --exclude ".git/" \ 
-            --exclude ".github/" \ 
+            --exclude ".git/" \
+            --exclude ".github/" \
             --exclude ".gitignore" \
             --exclude ".gitattributes" \
             --exclude "node_modules/" \
             --exclude "tests/" \
             --exclude "docs/" \
             --exclude ".env" \
-            ./ deploy/ 
+            ./ deploy/
 
       - name: Deploy via SCP (send only content from deploy/)
         uses: appleboy/scp-action@v0.1.4
